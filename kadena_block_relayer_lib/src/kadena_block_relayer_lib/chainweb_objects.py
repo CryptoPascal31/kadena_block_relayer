@@ -150,3 +150,8 @@ class Cut(Struct, frozen=True):
 
     def __gt__(self, other):
         return self.decoded_weight > other.decoded_weight
+
+class BlocksInfo(Struct, frozen=True):
+    items: list[BlockWithPayloadOutputs]
+    limit: int
+    next: str | None

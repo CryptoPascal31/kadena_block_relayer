@@ -6,7 +6,7 @@ import logging
 import aiohttp
 
 from .kadena_common import b64_decode
-from .chainweb_objects import BlockHeader, BlockEvent, HeaderEvent, BlockWithPayloadOutputs
+from .chainweb_objects import BlockHeader, BlockEvent, HeaderEvent, BlockWithPayloadOutputs, BlocksInfo
 from .peers import PeersDb
 from .peer_client import PeerClient
 
@@ -119,7 +119,7 @@ class BlockRelayer:
         headers = [BlockHeader.parse(x) for x in map(b64_decode, resp.items)]
         payloads = await asyncio.gather(*map(lambda h: self.client.getPayload(chain, h.payloadHash), headers))
         blocks = map(lambda x, y: BlockWithPayloadOutputs(header=x, payloadWithOutputs=y), headers, payloads)
-        return (list(blocks), resp.limit, resp.next)
+        return BlocksInfo(items=list(blocks), limit=resp.limit, next=resp.next)
 
     def _publish_cut(self, new_cut):
         if self.best_cut is None or new_cut > self.best_cut:

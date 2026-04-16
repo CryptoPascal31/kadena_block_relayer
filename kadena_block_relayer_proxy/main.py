@@ -44,7 +44,7 @@ def main():
     args = parser.parse_args()
 
     logging.config.dictConfig(LOGGING_CONFIG)
-    uvicorn.run(get_app(args.network), host="127.0.0.1", port=5000, log_config=LOGGING_CONFIG)
+    uvicorn.run(get_app(args.network), host=args.host, port=args.port, log_config=LOGGING_CONFIG)
 
 
 if __name__ == "__main__":

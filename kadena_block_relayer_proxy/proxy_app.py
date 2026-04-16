@@ -37,8 +37,8 @@ class Info(Struct, frozen=True):
     nodeVersion: str
 
 class LowerUpper(Struct, frozen=True):
-    lower: [int]
-    upper: [int]
+    lower: list[str]
+    upper: list[str]
 
 
 class JsonMsgspecRsponse(Response):
