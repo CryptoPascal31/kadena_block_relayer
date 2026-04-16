@@ -155,3 +155,15 @@ class BlocksInfo(Struct, frozen=True):
     items: list[BlockWithPayloadOutputs]
     limit: int
     next: str | None
+
+
+class PeerInfos(Struct, frozen=True, cache_hash=True):
+    items: list[Peer]
+    limit: int
+    next: str | None
+
+
+class HeadersInfo(Struct, frozen=True):
+    items: list[str]
+    limit: int
+    next: str | None

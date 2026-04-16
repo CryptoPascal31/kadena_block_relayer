@@ -5,24 +5,11 @@ from yarl import URL
 import msgspec
 from msgspec import Struct
 
-from .chainweb_objects import Cut, Peer, PayloadWithOutput
+from .chainweb_objects import Cut, Peer, PayloadWithOutput, PeerInfos, HeadersInfo
 from .kadena_common import b64_decode
 from .exceptions import Missingdata
 
 logger = logging.getLogger(__name__)
-
-
-class PeerInfos(Struct, frozen=True, cache_hash=True):
-    items: list[Peer]
-    limit: int
-    next: str | None
-
-
-class HeadersInfo(Struct, frozen=True):
-    items: list[str]
-    limit: int
-    next: str | None
-
 
 def ensure_list(x):
     if isinstance(x, list):
