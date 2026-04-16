@@ -1,0 +1,20 @@
+[project]
+name = "kadena-block-relayer-proxy"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "kadena-block-relayer-lib",
+    "msgspec>=0.21.1",
+    "starlette>=1.0.0",
+    "uvicorn>=0.44.0",
+]
+
+[tool.uv.sources]
+kadena-block-relayer-lib = { workspace = true }
+
+[dependency-groups]
+dev = [
+    "ruff>=0.15.10",
+]

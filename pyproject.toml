@@ -1,0 +1,17 @@
+[project]
+name = "kadena-block-relayer"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = []
+
+[tool.uv.workspace]
+members = [
+    "kadena_block_relayer_lib",
+    "kadena_block_relayer_proxy",
+]
+
+[dependency-groups]
+dev = ["kadena_block_relayer_lib"]
+
+[tool.uv.sources]
+kadena_block_relayer_lib = { workspace = true }
