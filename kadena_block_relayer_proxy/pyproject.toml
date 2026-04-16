@@ -19,5 +19,8 @@ dev = [
     "ruff>=0.15.10",
 ]
 
+[tool.setuptools]
+py-modules = ["main", "proxy_app"]
+
 [project.scripts]
 kadena-proxy = "main:main"
