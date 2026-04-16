@@ -58,7 +58,7 @@ class BoundedQueue(asyncio.Queue):
 class BlockRelayer:
     def __init__(self, network="mainnet01", cut_poll_delay=5.0):
         self.best_cut = None
-        self.handled = BoundedSet(50)
+        self.handled = BoundedSet(256)
         self.client = None
         self.tasks = None
         self.db = PeersDb(network)
@@ -155,10 +155,18 @@ class BlockRelayer:
                         except Exception as e:
                             logger.warn("Peer {!s} Invalid because of {!s}".format(p.address, repr(e)))
 
-    async def _fetchBlockTask(self, chain, block_hash):
+    async def _fetchBlockTask(self, chain, block_hash, parents_count=2):
         try:
             raw_header = await self.client.getHeader(chain, block_hash)
             bh = BlockHeader.parse(raw_header)
+
+            # Check in case parents are missing, this can happen with a short time between 2 blocks
+            #  => retrieve them first
+            if parents_count > 0 and bh.parent not in self.handled:
+                logger.info("Parent {:s} of block {:s} missing".format(bh.parent, block_hash))
+                self.handled.add(bh.parent)
+                await self._fetchBlockTask(chain, bh.parent, parents_count-1)
+
             payload = await self.client.getPayload(chain, bh.payloadHash)
 
             if self.payload_queues:
