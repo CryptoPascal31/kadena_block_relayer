@@ -151,7 +151,6 @@ class BlockRelayer:
                             logger.debug("Trying peer {!s}".format(p.address))
                             await self.client.getCutFromPeer(p)
                             self.db.insert(p)
-                            logger.info("Adding peer {!s}".format(p.address))
                         except Exception as e:
                             logger.warn("Peer {!s} Invalid because of {!s}".format(p.address, repr(e)))
 
