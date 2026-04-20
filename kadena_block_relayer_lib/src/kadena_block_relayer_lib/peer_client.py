@@ -73,19 +73,19 @@ class PeerClient:
             prms["next"] = _next
 
         with self.peerDb.next_peer() as peer:
-            async with self.post(peer, "chain", chain, "header", "branch", params=prms, data=data) as resp:
+            async with self.post(peer, "chain", str(chain), "header", "branch", params=prms, data=data) as resp:
                 data = await resp.read()
                 return msgspec.json.decode(data, type=HeadersInfo)
 
     async def _getHeader(self, chain, block_hash):
         with self.peerDb.next_peer() as peer:
-            async with self.get(peer, "chain", chain, "header", block_hash, raise_for_status=raise_missing) as resp:
+            async with self.get(peer, "chain", str(chain), "header", block_hash, raise_for_status=raise_missing) as resp:
                 data = await resp.read()
                 return b64_decode(data)
 
     async def _getPayload(self, chain, payload_hash):
         with self.peerDb.next_peer() as peer:
-            async with self.get(peer, "chain", chain, "payload", payload_hash, "outputs", raise_for_status=raise_missing) as resp:
+            async with self.get(peer, "chain", str(chain), "payload", payload_hash, "outputs", raise_for_status=raise_missing) as resp:
                 data = await resp.read()
                 return msgspec.json.decode(data, type=PayloadWithOutput)
 
