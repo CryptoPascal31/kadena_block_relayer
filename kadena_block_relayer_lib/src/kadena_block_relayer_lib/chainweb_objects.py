@@ -77,6 +77,9 @@ class BlockHeader:
     def __eq__(self, other):
         return self.hash == other.hash
 
+    def __lt__(self, other):
+        return self.height < other.height
+
     def __hash__(self):
         return hash(self.hash)
 
@@ -125,6 +128,12 @@ class HeaderEvent(Struct, frozen=True):
 class BlockWithPayloadOutputs:
     header: BlockHeader
     payloadWithOutputs: PayloadWithOutput
+
+    def __eq__(self, other):
+        return self.header == other.header
+
+    def __lt__(self, other):
+        return self.header < other.header
 
 
 class CutHash(Struct, frozen=True):

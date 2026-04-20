@@ -106,6 +106,24 @@ class BlockRelayer:
         finally:
             self.headers_queues.remove(q)
 
+    async def blocks_range(self, chain, minheight, maxheight, reverse=False):
+        """ A convenience wrapper of get_block_branches"""
+        cut = await self.get_cut()
+        tip = cut.hashes[str(chain)].hash
+
+        if reverse:
+            _range = range(maxheight-19, minheight-20, -20)
+        else:
+            _range = range(minheight, maxheight+1, 20)
+
+        for _minheight in _range:
+            _minheight = max(_minheight, minheight)
+            _maxheight = min(_minheight + 19, maxheight)
+
+            info = await self.get_block_branches(chain, 20, "", _minheight, _maxheight, [], [tip])
+            for block in sorted(info.items, reverse=reverse):
+                yield block
+
     def get_block(self, chain, limit, _next, minheight, maxheight):
         return self._handle_headers(chain, self.client.getHeaders(chain, limit, _next, minheight, maxheight))
 
