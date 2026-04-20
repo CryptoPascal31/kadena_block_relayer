@@ -58,6 +58,7 @@ class BoundedQueue(asyncio.Queue):
 class BlockRelayer:
     def __init__(self, network="mainnet01", cut_poll_delay=5.0):
         self.best_cut = None
+        self.first_cut_event = asyncio.Event()
         self.handled = BoundedSet(256)
         self.client = None
         self.tasks = None
@@ -112,6 +113,7 @@ class BlockRelayer:
         return self._handle_headers(chain, self.client.getHeadersBranch(chain, limit, _next, minheight, maxheight, lower, upper))
 
     async def get_cut(self):
+        await self.first_cut_event.wait()
         return self.best_cut
 
     async def _handle_headers(self, chain, getter):
@@ -126,6 +128,8 @@ class BlockRelayer:
             logger.info("New cut received with weight:{:s}".format(new_cut.weight))
 
             self.best_cut = new_cut
+            self.first_cut_event.set()
+
             self._fetch_missing_blocks()
 
     async def _fetchCutTask(self):
